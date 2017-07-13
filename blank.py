@@ -2,12 +2,16 @@ import subprocess
 import os
 
 threshold = 0.002
-#action = "show"
-action = "openedit"
+action = "show"
+ignore = "Alte Dokumente"
+# Ignore files and folders containing the ignore pattern
+disable_ignore = False
+#action = "openedit"
 #action = "cleanup"
 
 print "Try to find empty pages"
 
+count = 0
 
 # traverse the folder and search for pdf files
 
@@ -19,7 +23,9 @@ for dirpath, dirs, files in os.walk("."):
   for filename in files:
     fname = os.path.join(dirpath,filename)
     if fname.endswith('.pdf'):      
-      all_pdfs.append(fname)
+      	if ignore not in fname or disable_ignore: 
+		all_pdfs.append(fname)
+		print fname
       
 
 #traverese all pdf files
@@ -56,7 +62,7 @@ for file in all_pdfs:
             
             if value < threshold and pagenumber != 0:
                     print "Empty page " + str(pagenumber) + " Value: " + str(value) + " File: " + str(file)
-                    
+                    count = count + 1
             if value < threshold and pagenumber != 0 and action == "openedit" and lastopen != file:
                 p=subprocess.Popen("pdfshuffler '%s'" % (file), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 lastopen = file                
@@ -67,3 +73,4 @@ for file in all_pdfs:
                 print "we could use something like pdftk 1.pdf cat 1 3 output 3.pdf here"
         
         
+print "Empty Pages sum: " + str(count)
