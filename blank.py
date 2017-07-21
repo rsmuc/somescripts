@@ -11,7 +11,7 @@ ignore = "Alte Dokumente"
 # Ignore files and folders containing the ignore pattern
 disable_ignore = False
 #action = "openedit"
-#action = "cleanup"
+action = "cleanup"
 
 print "Try to find empty pages"
 
@@ -26,7 +26,7 @@ all_pdfs = []
 for dirpath, dirs, files in os.walk("."): 
   for filename in files:
     fname = os.path.join(dirpath,filename)
-    if fname.endswith('.pdf'):      
+    if fname.endswith('.pdf') or fname.endswith('.PDF'):
       	if ignore not in fname or disable_ignore: 
 		all_pdfs.append(fname)
 		print fname
